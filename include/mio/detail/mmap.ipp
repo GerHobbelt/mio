@@ -26,6 +26,7 @@
 #include "mio/detail/string_util.hpp"
 
 #include <algorithm>
+#include <vector>
 
 #ifndef _WIN32
 # include <unistd.h>

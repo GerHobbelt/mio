@@ -5,8 +5,8 @@
 #include <algorithm>
 #include <fstream>
 
-int handle_error(const std::error_code& error);
-void allocate_file(const std::string& path, const int size);
+static int handle_error(const std::error_code& error);
+static void allocate_file(const std::string& path, const int size);
 
 int main()
 {
@@ -60,14 +60,14 @@ int main()
     assert(the_answer_to_everything == 42);
 }
 
-int handle_error(const std::error_code& error)
+static int handle_error(const std::error_code& error)
 {
     const auto& errmsg = error.message();
     std::printf("error mapping file: %s, exiting...\n", errmsg.c_str());
     return error.value();
 }
 
-void allocate_file(const std::string& path, const int size)
+static void allocate_file(const std::string& path, const int size)
 {
     std::ofstream file(path);
     std::string s(size, '0');

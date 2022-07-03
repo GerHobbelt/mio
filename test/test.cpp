@@ -24,9 +24,9 @@ using mmap_source = mio::basic_mmap_source<std::byte>;
 template<class MMap>
 void test_at_offset(const MMap& file_view, const std::string& buffer,
         const size_t offset);
-void test_at_offset(const std::string& buffer, const char* path,
+static void test_at_offset(const std::string& buffer, const char* path,
         const size_t offset, std::error_code& error);
-int handle_error(const std::error_code& error);
+static int handle_error(const std::error_code& error);
 
 int main()
 {
@@ -131,7 +131,7 @@ int main()
     std::printf("all tests passed!\n");
 }
 
-void test_at_offset(const std::string& buffer, const char* path,
+static void test_at_offset(const std::string& buffer, const char* path,
         const size_t offset, std::error_code& error)
 {
     // Sanity check.
@@ -166,7 +166,7 @@ void test_at_offset(const MMap& file_view, const std::string& buffer,
             buf_idx < buffer.size() && view_idx < file_view.size();
             ++buf_idx, ++view_idx) {
         if(file_view[view_idx] != buffer[buf_idx]) {
-            std::printf("%luth byte mismatch: expected(%d) <> actual(%d)",
+            std::printf("%zuth byte mismatch: expected(%d) <> actual(%d)",
                     buf_idx, buffer[buf_idx], file_view[view_idx]);
             std::cout << std::flush;
             assert(0);
@@ -174,7 +174,7 @@ void test_at_offset(const MMap& file_view, const std::string& buffer,
     }
 }
 
-int handle_error(const std::error_code& error)
+static int handle_error(const std::error_code& error)
 {
     const auto& errmsg = error.message();
     std::printf("Error mapping file: %s, exiting...\n", errmsg.c_str());
