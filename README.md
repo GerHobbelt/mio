@@ -1,11 +1,13 @@
 # mio
+
 An easy to use header-only cross-platform C++11 memory mapping library with an MIT license.
 
 mio has been created with the goal to be easily includable (i.e. no dependencies) in any C++ project that needs memory mapped file IO without the need to pull in Boost.
 
 Please feel free to open an issue, I'll try to address any concerns as best I can.
 
-### Why?
+## Why?
+
 Because memory mapping is the best thing since sliced bread!
 
 More seriously, the primary motivation for writing this library instead of using Boost.Iostreams, was the lack of support for establishing a memory mapping with an already open file handle/descriptor. This is possible with mio.
@@ -15,8 +17,9 @@ Furthermore, Boost.Iostreams' solution requires that the user pick offsets exact
 Albeit a minor nitpick, Boost.Iostreams implements memory mapped file IO with a `std::shared_ptr` to provide shared semantics, even if not needed, and the overhead of the heap allocation may be unnecessary and/or unwanted.
 In mio, there are two classes to cover the two use-cases: one that is move-only (basically a zero-cost abstraction over the system specific mmapping functions), and the other that acts just like its Boost.Iostreams counterpart, with shared semantics.
 
-### How to create a mapping
-NOTE: the file must exist before creating a mapping.
+## How to create a mapping
+
+**NOTE**: the file must exist before creating a mapping.
 
 There are three ways to map a file into memory:
 
@@ -75,7 +78,7 @@ However, mio does not check whether the provided file descriptor has the same ac
 **WINDOWS USERS**: This library *does* support the use of wide character types
 for functions where character strings are expected (e.g. path parameters).
 
-### Example
+## Example
 
 ```c++
 #include <mio/mmap.hpp>
@@ -181,18 +184,21 @@ using mmap_source = mio::basic_mmap_source<std::byte>;
 using mmap_sink = mio::basic_mmap_sink<std::byte>;
 ```
 
-Though generally not needed, since mio maps users requested offsets to page boundaries, you can query the underlying system's page allocation granularity by invoking `mio::page_size()`, which is located in `mio/page.hpp`.
+Though generally not needed, since mio maps user-requested offsets to page boundaries, you can query the underlying system's page allocation granularity by invoking `mio::page_size()`, which is located in `mio/page.hpp`.
 
-### Single Header File 
-Mio can be added to your project as a single header file simply by including `\single_include\mio\mio.hpp`. Single header files can be regenerated at any time by running the `amalgamate.py` script within `\third_party`.  
+## Single Header File 
+
+Mio can be added to your project as a single header file simply by including `\single_include\mio\mio.hpp`. Single header files can be regenerated at any time by running the `amalgamate.py` script, which is located within `\third_party`.  
 ```
 python amalgamate.py -c config.json -s ../include
 ```
 
 ## CMake
+
 As a header-only library, mio has no compiled components. Nevertheless, a [CMake](https://cmake.org/overview/) build system is provided to allow easy testing, installation, and subproject composition on many platforms and operating systems.
 
 ### Testing
+
 Mio is distributed with a small suite of tests and examples.
 When mio is configured as the highest level CMake project, this suite of executables is built by default.
 Mio's test executables are integrated with the CMake test driver program, [CTest](https://cmake.org/cmake/help/latest/manual/ctest.1.html).
@@ -245,7 +251,7 @@ Mio's testing is also configured to operate as a client to the [CDash](https://w
 
 Mio's build system provides an installation target and support for downstream consumption via CMake's [`find_package`](https://cmake.org/cmake/help/v3.0/command/find_package.html) intrinsic function.
 CMake allows installation to an arbitrary location, which may be specified by defining `CMAKE_INSTALL_PREFIX` at configure time.
-In the absense of a user specification, CMake will install mio to conventional location based on the platform operating system.
+In the absense of a user specification, CMake will install mio to a conventional location based on the platform operating system.
 
 To use a static configuration build tool, such as GNU Make or Ninja:
 
@@ -293,7 +299,7 @@ find_package( mio REQUIRED )
 target_link_libraries( MyTarget PUBLIC mio::mio )
 ```
 
-**WINDOWS USERS**: The `mio::mio` target `#define`s `WIN32_LEAN_AND_MEAN` and `NOMINMAX`. The former ensures the imported surface area of the Win API is minimal, and the latter disables Windows' `min` and `max` macros so they don't intefere with `std::min` and `std::max`. Because *mio* is a header only library, these defintions will leak into downstream CMake builds. If their presence is causing problems with your build then you can use the alternative `mio::mio_full_winapi` target, which adds none of these defintions.
+**WINDOWS USERS**: The `mio::mio` target `#define`s `WIN32_LEAN_AND_MEAN` and `NOMINMAX`. The former ensures the imported surface area of the Win API is minimal, and the latter disables Windows' `min` and `max` macros so they don't interfere with `std::min` and `std::max`. Because *mio* is a header only library, these defintions will leak into downstream CMake builds. If their presence is causing problems with your build then you can use the alternative `mio::mio_full_winapi` target, which adds none of these definitions.
 
 If mio was installed to a non-conventional location, it may be necessary for downstream projects to specify the mio installation root directory via either
 
@@ -313,8 +319,9 @@ cpack -G <generator name> -C Release
 The list of supported generators varies from platform to platform. See the output of `cpack --help` for a complete list of supported generators on your platform.
 
 ### Subproject Composition
+
 To use mio as a subproject, copy the mio repository to your project's dependencies/externals folder.
-If your project is version controlled using git, a git submodule or git subtree can be used to syncronize with the updstream repository.
+If your project is version controlled using git, a git submodule or git subtree can be used to synchronize with the upstream repository.
 The [use](https://services.github.com/on-demand/downloads/submodule-vs-subtree-cheat-sheet/) and [relative advantages](https://andrey.nering.com.br/2016/git-submodules-vs-subtrees/) of these git facilities is beyond the scope of this document, but in brief, each may be established as follows:
 
 ```sh
@@ -328,7 +335,7 @@ git subtree add --prefix <path/to/dependencies>/mio       \
     https://github.com/mandreyel/mio.git master --squash
 ```
 
-Given a mio subdirectory in a project, simply add the following lines to your project's to add mio include directories to your target's include path.
+Given a mio subdirectory in a project, simply add the following lines to your project's cmake script to add mio include directories to your target's include path.
 
 ```cmake
 add_subdirectory( path/to/mio/ )
